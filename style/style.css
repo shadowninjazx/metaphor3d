@@ -1,0 +1,28 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #121212;
+    height: 100%;
+    width: 100%;
+  }
+
+a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+a:active {
+    text-decoration: none;
+    color: white;
+}
