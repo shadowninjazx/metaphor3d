@@ -44,7 +44,19 @@
     var root = "https://metaphor3d.com/assets/exp0/"
     var models = new Array("delicious_fruit_tart_cake.gltf", "french_fries_in_a_basket.gltf", 
                             "purple_succulent.gltf", "statue_of_liberty.gltf", "strawberry_smoothie.gltf",
-                            "the_eiffel_tower.gltf");
+                            "the_eiffel_tower.gltf",
+                            "a_penguin_with_a_skateboard.gltf",
+                            "a_pink_bicycle.gltf",
+                            "a_pirate_barrel_full_of_treasures.gltf",
+                            "a_troll_holding_a_wooden_shield.gltf",
+                            "batman.gltf",
+                            "big_juicy_hamburger.gltf",
+                            "chipotle_bowl.gltf",
+                            "chocolate_vanilla_and_strawberry_ice_cream.gltf",
+                            "futuristic_modern_residential_house.gltf",
+                            "rubber_ducky_wearing_a_cowboy_hat.gltf",
+                            "salmon_sushi_on_a_plate.gltf",
+                            "spooky_halloween_haunted_house.gltf");
     function choosePic() {
         var randomNum = Math.floor(Math.random() * models.length);
         document.getElementById("model_viewer").src = root + models[randomNum];
