@@ -9,23 +9,54 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <body>
 
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div style="color:black; text-align:center">
-            <model-viewer id="model_viewer" src="https://metaphor3d.com/assets/exp0/delicious_fruit_tart_cake.gltf" ar ar-modes="scene-viewer webxr quick-look" camera-controls poster="" shadow-intensity="0.36" shadow-softness="0.84" exposure="0.7" environment-image="legacy"
-            style="width:600px; height:300px"
-            >
-                <div class="progress-bar hide" slot="progress-bar">
-                    <div class="update-bar"></div>
+    <div class="row h-100">
+        
+        <div class="col-6">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center d-flex justify-content-center">
+                    <div class="col-3">
+                        <img id="texture_1" class="img-fluid" src="assets/exp1/naruto.png" value="assets/exp1/naruto.png"/>
+                    </div>
+                    <div class="col-3">
+                        <img id="texture_2" class="img-fluid" src="assets/exp1/anime.png" value="assets/exp1/anime.png"/>
+                    </div>
+                    <div class="col-3">
+                        <img id="texture_3" class="img-fluid" src="assets/exp1/cyberpunk.png" value="assets/exp1/cyberpunk.png"/>
+                    </div>
                 </div>
-                <button slot="ar-button" id="ar-button">
-                    View in your space
-                </button>
-                <!-- <div id="ar-prompt">
-                    <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
-                </div> -->
-            </model-viewer>
-            <p id="model_viewer_text"></p>
+            </div>
         </div>
+
+        <div class="col-6">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <div style="color:black; text-align:center">
+                    <model-viewer id="canvas" src="assets/exp1/naruto.glb" ar ar-modes="scene-viewer webxr quick-look" camera-controls poster="" shadow-intensity="0.36" shadow-softness="0.84" exposure="0.7" environment-image="legacy"
+                    style="width:600px; height:300px"
+                    >
+                        <div class="progress-bar hide" slot="progress-bar">
+                            <div class="update-bar"></div>
+                        </div>
+                        <button slot="ar-button" id="ar-button">
+                            View in your space
+                        </button>
+                        <!-- <div id="ar-prompt">
+                            <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+                        </div> -->
+                        <div class="controls">
+                        <div>
+                            <p>Diffuse</p>
+                            <select id="diffuse">
+                            <option value="assets/exp1/naruto.png">Naruto</option>
+                            <option value="assets/exp1/anime.png">Anime</option>
+                            <option value="assets/exp1/cyberpunk.png">Cyberpunk</option>
+                            </select>
+                        </div>
+                    </model-viewer>
+                    <p id="model_viewer_text"></p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="fixed-bottom">
@@ -42,27 +73,57 @@
 
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-<script>
-    window.onload = choosePic;
-    var root = "https://metaphor3d.com/assets/exp0/"
-    var models = new Array("delicious_fruit_tart_cake.gltf", "french_fries_in_a_basket.gltf", 
-                            "purple_succulent.gltf", "statue_of_liberty.gltf", "strawberry_smoothie.gltf",
-                            "the_eiffel_tower.gltf",
-                            "a_penguin_with_a_skateboard.gltf",
-                            "a_pink_bicycle.gltf",
-                            "a_pirate_barrel_full_of_treasures.gltf",
-                            "a_troll_holding_a_wooden_shield.gltf",
-                            "batman.gltf",
-                            "big_juicy_hamburger.gltf",
-                            "chipotle_bowl.gltf",
-                            "chocolate_vanilla_and_strawberry_ice_cream.gltf",
-                            "futuristic_modern_residential_house.gltf",
-                            "rubber_ducky_wearing_a_cowboy_hat.gltf",
-                            "salmon_sushi_on_a_plate.gltf",
-                            "spooky_halloween_haunted_house.gltf");
-    function choosePic() {
-        var randomNum = Math.floor(Math.random() * models.length);
-        document.getElementById("model_viewer").src = root + models[randomNum];
-        document.getElementById("model_viewer_text").innerText =  models[randomNum].replaceAll('_', ' ').replaceAll('.gltf', '');
-    }
-</script>
+<script type="module">
+    const modelViewerTexture1 = document.querySelector("model-viewer#canvas");
+    
+    modelViewerTexture1.addEventListener("load", () => {
+    
+      const material = modelViewerTexture1.model.materials[0];
+    
+      const createAndApplyTexture = async (channel, event) => {
+        const texture = await modelViewerTexture1.createTexture(event.target.value);
+        if (channel.includes('base') || channel.includes('metallic')) {
+          material.pbrMetallicRoughness[channel].setTexture(texture);
+        } else {
+          material[channel].setTexture(texture);
+        }
+      }
+
+      const swapTexture = async (channel, uri) => {
+        const texture = await modelViewerTexture1.createTexture(uri);
+        if (channel.includes('base') || channel.includes('metallic')) {
+          material.pbrMetallicRoughness[channel].setTexture(texture);
+        } else {
+          material[channel].setTexture(texture);
+        }
+      }
+    
+      document.querySelector('#diffuse').addEventListener('input', (event) => {
+        console.log(event);
+        createAndApplyTexture('baseColorTexture', event);
+      });
+
+      document.querySelector('#texture_1').addEventListener('click', (event) => {
+        var target_texture = document.getElementById("texture_1").src;
+        console.log(target_texture);
+        console.log(event);
+        swapTexture('baseColorTexture', target_texture);
+      });
+
+      document.querySelector('#texture_2').addEventListener('click', (event) => {
+        var target_texture = document.getElementById("texture_2").src;
+        console.log(target_texture);
+        console.log(event);
+        swapTexture('baseColorTexture', target_texture);
+      });
+
+      document.querySelector('#texture_3').addEventListener('click', (event) => {
+        var target_texture = document.getElementById("texture_3").src;
+        console.log(target_texture);
+        console.log(event);
+        swapTexture('baseColorTexture', target_texture);
+      });
+    
+    });
+    
+    </script>
